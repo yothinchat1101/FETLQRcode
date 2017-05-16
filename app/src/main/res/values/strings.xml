@@ -3,5 +3,14 @@
     <string name="login">Sign in</string>
     <string name="user">User :</string>
     <string name="password">Password :</string>
+    <string name="new_register">New Register</string>
+    <string name="name">Name :</string>
+
+    <string name="title_HaveSpace">There is a gap</string>
+    <string name="message_HaveSpace">Please fill in all fields</string>
+    <string name="title_UserFalse">User False</string>
+    <string name="title_PasswordFalse">Password False</string>
+    <string name="message_UserFalse">No This User in my Database</string>
+    <string name="message_PassFalse">Please Try Again Password False</string>
 
 </resources>

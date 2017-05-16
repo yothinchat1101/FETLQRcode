@@ -3,4 +3,6 @@
     <dimen name="margin">50dp</dimen>
     <dimen name="dialog_bg_radius">20dp</dimen>
     <dimen name="dialog_button_radius">100dp</dimen>
+    <dimen name="padding">20dp</dimen>
+    <dimen name="h1">20sp</dimen>
 </resources>
