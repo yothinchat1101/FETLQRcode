@@ -12,5 +12,6 @@
     <string name="title_PasswordFalse">Password False</string>
     <string name="message_UserFalse">No This User in my Database</string>
     <string name="message_PassFalse">Please Try Again Password False</string>
+    <string name="welcome">Welcome To Fujikura</string>
 
 </resources>

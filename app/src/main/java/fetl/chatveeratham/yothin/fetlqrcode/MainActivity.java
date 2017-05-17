@@ -3,10 +3,15 @@ package fetl.chatveeratham.yothin.fetlqrcode;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -15,7 +20,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView textView;
     private Button button;
     private String userString, passwordString;
-
 
 
     @Override
@@ -52,16 +56,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //For TextView
         if (v == textView) {
             //Intent to Register
-            Intent intent = new Intent(MainActivity.this,RegisterActivity.class);
+            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
         }
 
         //For Button
         if (v == button) {
+            //Get Value From EditText
             userString = userEditText.getText().toString().trim();
             passwordString = passwordEditText.getText().toString().trim();
 
+            //Check Space
+            if (userEditText.equals("") || passwordString.equals("")) {
+                MyAlert myAlert = new MyAlert(MainActivity.this);
+                myAlert.myDialog(getResources().getString(R.string.title_HaveSpace),
+                        getResources().getString(R.string.message_HaveSpace));
+            } else {
+                //No space
+                checkUserAndPass();
+            }
+
         }
+    }
+
+    private void checkUserAndPass() {
+        try {
+            GetData getData = new GetData(this);
+            MyConstant myConstant = new MyConstant();
+            getData.execute(myConstant.getUrlGetUser());
+            String strJSON = getData.get();
+            Log.d("17MayV2", "JSON ==> " + strJSON);
+            //showMessage(strJSON);
+
+            JSONArray jsonArray = new JSONArray(strJSON);
+            boolean b = true;  // User False
+            String strName = null, strPassword = null, strUser =null;
+            MyAlert myAlert = new MyAlert(this);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                if (userString.equals(jsonObject.getString("User"))) {
+                    b = false; //User True
+
+                    strName = jsonObject.getString("Name");
+                    strPassword = jsonObject.getString("Password");
+                    strUser = jsonObject.getString("User");
+                }
+
+                //if (passwordString.equals(jsonObject.getString("Password"))) {
+
+                //}
+
+            }// For
+
+            if (b) {
+                //User False
+                myAlert.myDialog(getResources().getString(R.string.title_UserFalse),
+                        getResources().getString(R.string.message_UserFalse));
+            } else if (passwordString.equals(strPassword)) {
+                //Password True
+                Toast.makeText(MainActivity.this, getString(R.string.welcome) + strName, Toast.LENGTH_SHORT).show();
+
+                //Intent to Service
+                Intent intent = new Intent(MainActivity.this,ServiceActivity.class);
+                intent.putExtra("Login", strName);
+                startActivity(intent);
+                finish();
+
+            } else {
+                //Password False
+                myAlert.myDialog(getResources().getString(R.string.title_PasswordFalse),
+                        getResources().getString(R.string.message_PassFalse));
+
+            }
+
+
+        } catch (Exception e) {
+
+
+            Log.d("17MayV2", "e checkUser ==> " + e.toString());
+        }
+    }
+
+    private void showMessage(String strJSON) {
+        Toast.makeText(MainActivity.this, strJSON, Toast.LENGTH_SHORT).show();
     }
 
 
