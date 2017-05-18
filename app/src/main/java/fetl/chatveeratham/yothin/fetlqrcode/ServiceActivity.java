@@ -7,6 +7,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class ServiceActivity extends AppCompatActivity {
 
     //Explicit
@@ -43,7 +46,24 @@ public class ServiceActivity extends AppCompatActivity {
             getData.execute(urlJSON);
             String strJSON = getData.get();
             Log.d("18MayV1", "JSON ==> " + strJSON);
-            //Toast.makeText(ServiceActivity.this, strJSON, Toast.LENGTH_SHORT).show();
+
+            JSONArray jsonArray = new JSONArray(strJSON);
+            int i = jsonArray.length();
+            String[] iconStrings = new String[i];
+            String[] titleStrings = new String[i];
+            String[] detailStrings = new String[i];
+
+            for (int i1 = 0; i1 < i; i1++) {
+                //สร้างตัวชี้
+                JSONObject jsonObject = jsonArray.getJSONObject(i1);
+                iconStrings[i1] = jsonObject.getString("Image");
+                titleStrings[i1] = jsonObject.getString("Produce");
+                detailStrings[i1] = jsonObject.getString("Detail");
+
+            }//For
+
+            MyAdapter myAdapter = new MyAdapter(this, iconStrings, titleStrings, detailStrings);
+            listView.setAdapter(myAdapter);
 
         } catch (Exception e) {
             Log.d("18MayV1", "e createListView ==> " + e.toString());
