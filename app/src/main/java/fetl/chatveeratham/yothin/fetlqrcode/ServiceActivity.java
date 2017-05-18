@@ -9,17 +9,18 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ServiceActivity extends AppCompatActivity {
+public class ServiceActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Explicit
     private TextView textView;
     private ImageView barImageView, qrImageView;
     private ListView listView;
-    private String nameString;
+    private String nameString,myDoceString;
 
 
     @Override
@@ -35,7 +36,47 @@ public class ServiceActivity extends AppCompatActivity {
         //Create ListView
         createListView();
 
+        //Controller
+        controller();
+
     }//Main Method
+
+    //เป็นการรับค่าที่โยนไป
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            myDoceString = data.getStringExtra("SCAN_RESULT");
+            Log.d("18MayV2", "myCodeString ==> " + myDoceString);
+            Toast.makeText(ServiceActivity.this, myDoceString, Toast.LENGTH_SHORT).show();
+
+            try {
+                SearcKey searcKey = new SearcKey(this);
+                searcKey.execute(myDoceString);
+                String strJSON = searcKey.get();
+
+                JSONArray jsonArray = new JSONArray(strJSON);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                Intent intent = new Intent(ServiceActivity.this, DetailActivity.class);
+                intent.putExtra("Name", jsonObject.getString("Produce"));
+                intent.putExtra("Detail", jsonObject.getString("Detail"));
+                intent.putExtra("Icon", jsonObject.getString("Image"));
+                startActivity(intent);
+
+
+
+            } catch (Exception e) {
+                Log.d("18MayV2", "e onAc ==> " + e.toString());
+            }
+        }
+
+    }
+
+    private void controller() {
+        barImageView.setOnClickListener(this);
+        qrImageView.setOnClickListener(this);
+    }
 
     private void createListView() {
 
@@ -73,7 +114,7 @@ public class ServiceActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     Intent intent = new Intent(ServiceActivity.this, DetailActivity.class);
-                    intent.putExtra("Name",titleStrings[position]);
+                    intent.putExtra("Name", titleStrings[position]);
                     intent.putExtra("Detail", detailStrings[position]);
                     intent.putExtra("Icon", iconStrings[position]);
                     startActivity(intent);
@@ -100,4 +141,27 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        int i = 0;
+        String[] codeStrings = new String[]{"BAR_CODE_MODE", "QR_CODE_MODE"};
+        if (v == barImageView) {
+            i = 0;
+        }
+
+        if (v == qrImageView) {
+            i = 1;
+        }
+
+        try {
+            //เป็นการโยนค่าหรือไปยังที่อื่น
+            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+            intent.putExtra("SCAN_MODE", codeStrings[i]);
+            startActivityForResult(intent, 0);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }//Main Class

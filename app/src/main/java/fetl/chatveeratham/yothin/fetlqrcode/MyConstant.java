@@ -10,6 +10,7 @@ public class MyConstant {
     private String urlPostUser = "http://androidthai.in.th/fetl/addUserYothin.php";
     private String urlGetUser = "http://androidthai.in.th/fetl/getUserYothin.php";
     private String urlGetProduct = "http://androidthai.in.th/fetl/getProduct.php";
+    private String urlGetProductWhere = "http://androidthai.in.th/fetl/getProduceWhereCode.php";
 
     public String getUrlGetUser() {
         return urlGetUser;
@@ -22,4 +23,9 @@ public class MyConstant {
     public String getUrlGetProduct() {
         return urlGetProduct;
     }
+
+    public String getUrlGetProductWhere() {
+        return urlGetProductWhere;
+    }
+
 }//Main Class
