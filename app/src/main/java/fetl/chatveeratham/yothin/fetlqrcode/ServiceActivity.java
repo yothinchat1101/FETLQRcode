@@ -1,12 +1,11 @@
 package fetl.chatveeratham.yothin.fetlqrcode;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ServiceActivity extends AppCompatActivity {
 
@@ -40,7 +39,8 @@ public class ServiceActivity extends AppCompatActivity {
             String urlJSON = myConstant.getUrlGetProduct();
 
             GetData getData = new GetData(this);
-            getData.equals(urlJSON);
+            //มาสเตอร์แก้แง่วววว
+            getData.execute(urlJSON);
             String strJSON = getData.get();
             Log.d("18MayV1", "JSON ==> " + strJSON);
             //Toast.makeText(ServiceActivity.this, strJSON, Toast.LENGTH_SHORT).show();
