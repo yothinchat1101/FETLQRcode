@@ -1,8 +1,11 @@
 package fetl.chatveeratham.yothin.fetlqrcode;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,9 +52,9 @@ public class ServiceActivity extends AppCompatActivity {
 
             JSONArray jsonArray = new JSONArray(strJSON);
             int i = jsonArray.length();
-            String[] iconStrings = new String[i];
-            String[] titleStrings = new String[i];
-            String[] detailStrings = new String[i];
+            final String[] iconStrings = new String[i];
+            final String[] titleStrings = new String[i];
+            final String[] detailStrings = new String[i];
 
             for (int i1 = 0; i1 < i; i1++) {
                 //สร้างตัวชี้
@@ -64,6 +67,19 @@ public class ServiceActivity extends AppCompatActivity {
 
             MyAdapter myAdapter = new MyAdapter(this, iconStrings, titleStrings, detailStrings);
             listView.setAdapter(myAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Intent intent = new Intent(ServiceActivity.this, DetailActivity.class);
+                    intent.putExtra("Name",titleStrings[position]);
+                    intent.putExtra("Detail", detailStrings[position]);
+                    intent.putExtra("Icon", iconStrings[position]);
+                    startActivity(intent);
+
+                }
+            });
 
         } catch (Exception e) {
             Log.d("18MayV1", "e createListView ==> " + e.toString());
